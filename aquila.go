@@ -2,7 +2,7 @@ package aquiladb
 
 import "github.com/Aquila-Network/go-aquila/src"
 
-func InitAquilaDb() *src.AquilaDb {
+func AquilaModule() *src.AquilaDb {
 	wallet := src.Wallet()
-	return src.NewAquilaDb(&wallet)
+	return src.NewAquila(&wallet)
 }

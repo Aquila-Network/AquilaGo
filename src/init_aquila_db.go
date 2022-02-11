@@ -1,36 +1,26 @@
 package src
 
-type CreateDbInterface interface {
-	Create(createDb *CreateDbRequestStruct, url string) (*CreateAquilaResponsStruct, error)
+type AquilaDbInterface interface {
+	CreateDatabase(createDb *CreateDbRequestStruct, url string) (*CreateAquilaResponsStruct, error)
+	SignDocument() // ???
+	InsertDocument(docInsert *DocInsertRequestStruct, url string) (*DocInsertResponseStruct, error)
+	DeleteDocument(docDelete *DocDeleteRequestStruct, url string) (*DocDeleteResponseStruct, error)
+	SearchKDocument(searchBody *SearchAquilaDbRequestStruct, url string) (*DocSearchResponseStruct, error)
 }
 
-type DocInsertInterface interface {
-	SendHTMLForParsingToMercury(mercuryRequest *MercuryRequestStruct, url string) (*MercuryResponseStruct, error)
-	SendContentToTxPick(txPickRequest *TxPickRequestStruct, url string) (*TxPickResponseStruct, error)
-	SendTextToAquilaHub(a *AquilaHubRequestStruct, url string) (*AquilaHubResponseStruct, error)
-	SendVectors(docInsert *DocInsertRequestStruct, url string) (*DocInsertResponseStruct, error)
-}
-
-type DocSearchInterface interface {
-	Search(searchBody *SearchAquilaDbRequestStruct, url string) (*DocSearchResponseStruct, error)
-}
-
-type DocDeleteInterface interface {
-	DocDelete(docDelete *DocDeleteRequestStruct, url string) (*DocDeleteResponseStruct, error)
+type AquilaHubInterface interface {
+	CreateHubDatabase(createDb *CreateDbRequestStruct, url string) (*CreateAquilaResponsStruct, error)
+	CompressDocument(a *AquilaHubRequestStruct, url string) (*AquilaHubResponseStruct, error)
 }
 
 type AquilaDb struct {
-	CreateDbInterface
-	DocInsertInterface
-	DocSearchInterface
-	DocDeleteInterface
+	AquilaDbInterface
+	AquilaHubInterface
 }
 
-func NewAquilaDb(wallet *WalletStruct) *AquilaDb {
+func NewAquila(wallet *WalletStruct) *AquilaDb {
 	return &AquilaDb{
-		CreateDbInterface:  NewCreateAquilaDatabase(wallet),
-		DocInsertInterface: NewDocInsertAquilaDatabase(wallet),
-		DocSearchInterface: NewSearchAquilaDatabase(wallet),
-		DocDeleteInterface: NewDocDeleteAquilaDatabase(wallet),
+		AquilaDbInterface:  NewAquilaDb(),
+		AquilaHubInterface: NewAquilaHub(),
 	}
 }
