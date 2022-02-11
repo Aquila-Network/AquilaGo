@@ -1,4 +1,4 @@
-package src
+package moduledb
 
 // =====================================
 // Mercury sturctures
@@ -139,54 +139,4 @@ type DocSearchData struct {
 type DocSearchResponseStruct struct {
 	Dist [][]float64
 	Docs [][]DocSearchData
-}
-
-// =====================================
-// Db Create:
-// =====================================
-
-type CreateAquilaResponsStruct struct {
-	DatabaseName string `json:"database_name"`
-	Success      bool   `json:"success"`
-}
-
-type MetadataStructCreateDb struct {
-	Name string `json:"name"`
-	Age  string `json:"age"`
-}
-
-type SchemaStruct struct {
-	Description string                 `json:"description"`
-	Unique      string                 `json:"unique"`
-	Encoder     string                 `json:"encoder"`
-	Codelen     int                    `json:"codelen"`
-	Metadata    MetadataStructCreateDb `json:"metadata"`
-}
-
-type DataStructCreateDb struct {
-	Schema SchemaStruct `json:"schema"`
-}
-
-type CreateDbRequestStruct struct {
-	Data      DataStructCreateDb `json:"data"`
-	Signature string             `json:"signature"`
-}
-
-// =====================================
-// Db Delete:
-// =====================================
-
-type DeleteDataStruct struct {
-	Ids          []string `json:"ids"`
-	DatabaseName string   `json:"database_name"`
-}
-
-type DocDeleteRequestStruct struct {
-	Data      DeleteDataStruct `json:"data"`
-	Signature string           `json:"signature"`
-}
-
-type DocDeleteResponseStruct struct {
-	Ids     []string `json:"ids"`
-	Success bool     `json:"success"`
 }
