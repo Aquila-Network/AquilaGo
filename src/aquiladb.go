@@ -16,10 +16,21 @@ func NewAquilaDb() *AquilaDbStruct {
 }
 
 // /db/create
-func (a *AquilaDbStruct) CreateDatabase(createDb *CreateDbRequestStruct, url string) (*CreateAquilaResponsStruct, error) {
+func (a *AquilaDbStruct) CreateDatabase(createDb DataStructCreateDb, url string) (*CreateAquilaResponsStruct, error) {
 
 	var responseAquilaDb *CreateAquilaResponsStruct
-	data, err := json.Marshal(createDb)
+
+	signature, err := CreateSignatureWallet(createDb)
+	if err != nil {
+		return responseAquilaDb, err
+	}
+
+	createDbRequest := CreateDbRequestStruct{
+		Data:      createDb,
+		Signature: signature,
+	}
+
+	data, err := json.Marshal(createDbRequest)
 
 	resp, err := http.Post(
 		url,

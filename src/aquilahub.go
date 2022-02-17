@@ -16,7 +16,7 @@ func NewAquilaHub() *AquilaHubStruct {
 }
 
 // /prepare
-func (a *AquilaHubStruct) CreateHubDatabase(createDb *CreateDbRequestStruct, url string) (*CreateAquilaResponsStruct, error) {
+func (a *AquilaHubStruct) CreateDatabase(createDb *CreateDbRequestStruct, url string) (*CreateAquilaResponsStruct, error) {
 
 	var responseAquilaDb *CreateAquilaResponsStruct
 	data, err := json.Marshal(createDb)

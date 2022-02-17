@@ -1,7 +1,7 @@
 package src
 
 type AquilaDbInterface interface {
-	CreateDatabase(createDb *CreateDbRequestStruct, url string) (*CreateAquilaResponsStruct, error)
+	CreateDatabase(createDb DataStructCreateDb, url string) (*CreateAquilaResponsStruct, error)
 	SignDocument() // ???
 	InsertDocument(docInsert *DocInsertRequestStruct, url string) (*DocInsertResponseStruct, error)
 	DeleteDocument(docDelete *DocDeleteRequestStruct, url string) (*DocDeleteResponseStruct, error)
@@ -9,7 +9,7 @@ type AquilaDbInterface interface {
 }
 
 type AquilaHubInterface interface {
-	CreateHubDatabase(createDb *CreateDbRequestStruct, url string) (*CreateAquilaResponsStruct, error)
+	CreateDatabase(createDb *CreateDbRequestStruct, url string) (*CreateAquilaResponsStruct, error)
 	CompressDocument(a *AquilaHubRequestStruct, url string) (*AquilaHubResponseStruct, error)
 }
 
@@ -18,7 +18,7 @@ type AquilaDb struct {
 	AquilaHubInterface
 }
 
-func NewAquila(wallet *WalletStruct) *AquilaDb {
+func NewAquila() *AquilaDb {
 	return &AquilaDb{
 		AquilaDbInterface:  NewAquilaDb(),
 		AquilaHubInterface: NewAquilaHub(),
