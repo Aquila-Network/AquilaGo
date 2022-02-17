@@ -1,38 +1,6 @@
 package src
 
 // =====================================
-// Mercury sturctures
-// =====================================
-
-type MercuryRequestStruct struct {
-	Url  string `json:"url"`
-	Html string `json:"html"`
-}
-
-// -----------------------------
-
-type MercuryDataStruct struct {
-	Title         string `json:"title"`
-	Author        string `json:"author"`
-	DatePublished string `json:"date_published"`
-	Dek           string `json:"dek"`
-	LeadImageUrl  string `json:"lead_image_url"`
-	Content       string `json:"content"`
-	NextPageUrl   string `json:"next_page_url"`
-	Url           string `json:"url"`
-	Domain        string `json:"domain"`
-	Except        string `json:"except"`
-	WordCount     int    `json:"word_count"`
-	Direction     string `json:"direction"`
-	TotalPages    int    `json:"total_pages"`
-	RenderedPages int    `json:"rendered_pages"`
-}
-
-type MercuryResponseStruct struct {
-	Data MercuryDataStruct `json:"data"`
-}
-
-// =====================================
 // Doc insert struct
 // =====================================
 
@@ -61,27 +29,10 @@ type DocInsertRequestStruct struct {
 }
 
 // -----------------------
+// Response
 
 type DocInsertResponseStruct struct {
 	Ids     []string `json:"ids"`
-	Success bool     `json:"success"`
-}
-
-// =====================================
-// TxPick
-// =====================================
-
-type TxPickRequestStruct struct {
-	Url  string `json:"url"`
-	Html string `json:"html"`
-}
-
-// ---------------------------------
-
-// Response txpick
-
-type TxPickResponseStruct struct {
-	Result  []string `json:"result"`
 	Success bool     `json:"success"`
 }
 
@@ -99,8 +50,7 @@ type AquilaHubRequestStruct struct {
 }
 
 // --------------------------------
-
-// Response Aquila Hub
+// Response
 
 type AquilaHubResponseStruct struct {
 	Vectors [][]float64
@@ -123,6 +73,7 @@ type SearchAquilaDbRequestStruct struct {
 }
 
 // --------------------------------
+// Response
 
 type MetadataSearchStruct struct {
 	Age  int
@@ -185,6 +136,9 @@ type DocDeleteRequestStruct struct {
 	Data      DeleteDataStruct `json:"data"`
 	Signature string           `json:"signature"`
 }
+
+// ----------------------------
+// Response
 
 type DocDeleteResponseStruct struct {
 	Ids     []string `json:"ids"`

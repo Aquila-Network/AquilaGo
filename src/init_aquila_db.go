@@ -1,10 +1,10 @@
 package src
 
 type AquilaDbInterface interface {
-	CreateDatabase(createDb DataStructCreateDb, url string) (*CreateAquilaResponsStruct, error)
+	CreateDatabase(createDb *DataStructCreateDb, url string) (*CreateAquilaResponsStruct, error)
 	SignDocument() // ???
-	InsertDocument(docInsert *DocInsertRequestStruct, url string) (*DocInsertResponseStruct, error)
-	DeleteDocument(docDelete *DocDeleteRequestStruct, url string) (*DocDeleteResponseStruct, error)
+	InsertDocument(docInsert *DatatDocInsertStruct, url string) (*DocInsertResponseStruct, error)
+	DeleteDocument(docDelete *DeleteDataStruct, url string) (*DocDeleteResponseStruct, error)
 	SearchKDocument(searchBody *SearchAquilaDbRequestStruct, url string) (*DocSearchResponseStruct, error)
 }
 

@@ -16,7 +16,7 @@ func NewAquilaDb() *AquilaDbStruct {
 }
 
 // /db/create
-func (a *AquilaDbStruct) CreateDatabase(createDb DataStructCreateDb, url string) (*CreateAquilaResponsStruct, error) {
+func (a *AquilaDbStruct) CreateDatabase(createDb *DataStructCreateDb, url string) (*CreateAquilaResponsStruct, error) {
 
 	var responseAquilaDb *CreateAquilaResponsStruct
 
@@ -25,8 +25,8 @@ func (a *AquilaDbStruct) CreateDatabase(createDb DataStructCreateDb, url string)
 		return responseAquilaDb, err
 	}
 
-	createDbRequest := CreateDbRequestStruct{
-		Data:      createDb,
+	createDbRequest := &CreateDbRequestStruct{
+		Data:      *createDb,
 		Signature: signature,
 	}
 
@@ -59,17 +59,24 @@ func (a *AquilaDbStruct) SignDocument() {}
 // Send vectors to Aquila DB
 // Response will be an array of ids
 // /db/doc/insert
-func (a *AquilaDbStruct) InsertDocument(docInsert *DocInsertRequestStruct, url string) (*DocInsertResponseStruct, error) {
+func (a *AquilaDbStruct) InsertDocument(docInsert *DatatDocInsertStruct, url string) (*DocInsertResponseStruct, error) {
 
 	var docInsertResponse *DocInsertResponseStruct
 
-	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(docInsert)
+	// var buf bytes.Buffer
+	// err := json.NewEncoder(&buf).Encode(docInsert)
+	// if err != nil {
+	// 	return docInsertResponse, err
+	// }
+	signature, err := CreateSignatureWallet(docInsert)
 	if err != nil {
 		return docInsertResponse, err
 	}
-
-	req, err := json.Marshal(docInsert)
+	insertDbRequest := &DocInsertRequestStruct{
+		Data:      *docInsert,
+		Signature: signature,
+	}
+	req, err := json.Marshal(insertDbRequest)
 	if err != nil {
 		return docInsertResponse, err
 	}
@@ -90,7 +97,7 @@ func (a *AquilaDbStruct) InsertDocument(docInsert *DocInsertRequestStruct, url s
 		return docInsertResponse, err
 	}
 
-	fmt.Println(string(body)) // will write response in the console
+	// fmt.Println(string(body)) // will write response in the console
 	json.Unmarshal(body, &docInsertResponse)
 
 	return docInsertResponse, nil
@@ -99,11 +106,20 @@ func (a *AquilaDbStruct) InsertDocument(docInsert *DocInsertRequestStruct, url s
 // Delelete Document
 // Deleted ids in response
 // /db/doc/delete
-func (a *AquilaDbStruct) DeleteDocument(docDelete *DocDeleteRequestStruct, url string) (*DocDeleteResponseStruct, error) {
+func (a *AquilaDbStruct) DeleteDocument(docDelete *DeleteDataStruct, url string) (*DocDeleteResponseStruct, error) {
 
 	var docDeleteResponse *DocDeleteResponseStruct
 
-	data, err := json.Marshal(docDelete)
+	signature, err := CreateSignatureWallet(docDelete)
+	if err != nil {
+		return docDeleteResponse, err
+	}
+	deleteDbRequest := &DocDeleteRequestStruct{
+		Data:      *docDelete,
+		Signature: signature,
+	}
+
+	data, err := json.Marshal(deleteDbRequest)
 
 	resp, err := http.Post(
 		url,
