@@ -5,11 +5,11 @@ type AquilaDbInterface interface {
 	SignDocument() // ???
 	InsertDocument(docInsert *DatatDocInsertStruct, url string) (*DocInsertResponseStruct, error)
 	DeleteDocument(docDelete *DeleteDataStruct, url string) (*DocDeleteResponseStruct, error)
-	SearchKDocument(searchBody *SearchAquilaDbRequestStruct, url string) (*DocSearchResponseStruct, error)
+	SearchKDocument(searchBody *DataSearchStruct, url string) (*DocSearchResponseStruct, error)
 }
 
 type AquilaHubInterface interface {
-	CreateDatabase(createDb *CreateDbRequestStruct, url string) (*CreateAquilaResponsStruct, error)
+	CreateDatabase(createDb *DataStructCreateDb, url string) (*CreateAquilaHubResponsStruct, error)
 	CompressDocument(a *AquilaHubRequestStruct, url string) (*AquilaHubResponseStruct, error)
 }
 
@@ -18,9 +18,9 @@ type AquilaDb struct {
 	AquilaHubInterface
 }
 
-func NewAquila() *AquilaDb {
+func NewAquila(wallet WalletStruct) *AquilaDb {
 	return &AquilaDb{
-		AquilaDbInterface:  NewAquilaDb(),
-		AquilaHubInterface: NewAquilaHub(),
+		AquilaDbInterface:  NewAquilaDb(wallet),
+		AquilaHubInterface: NewAquilaHub(wallet),
 	}
 }

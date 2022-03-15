@@ -3,16 +3,18 @@ package src
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
 
 type AquilaDbStruct struct {
+	Wallet WalletStruct
 }
 
-func NewAquilaDb() *AquilaDbStruct {
-	return &AquilaDbStruct{}
+func NewAquilaDb(wallet WalletStruct) *AquilaDbStruct {
+	return &AquilaDbStruct{
+		Wallet: wallet,
+	}
 }
 
 // /db/create
@@ -20,15 +22,12 @@ func (a *AquilaDbStruct) CreateDatabase(createDb *DataStructCreateDb, url string
 
 	var responseAquilaDb *CreateAquilaResponsStruct
 
-	signature, err := CreateSignatureWallet(createDb)
-	if err != nil {
-		return responseAquilaDb, err
-	}
-
 	createDbRequest := &CreateDbRequestStruct{
 		Data:      *createDb,
-		Signature: signature,
+		Signature: a.Wallet.SecretKey,
 	}
+	// fmt.Println("==================================")
+	// fmt.Printf("%+v", createDbRequest)
 
 	data, err := json.Marshal(createDbRequest)
 
@@ -48,7 +47,7 @@ func (a *AquilaDbStruct) CreateDatabase(createDb *DataStructCreateDb, url string
 	}
 
 	json.Unmarshal(body, &responseAquilaDb)
-	fmt.Println(string(body)) // write response in the console
+	// fmt.Println(string(body)) // write response in the console
 
 	return responseAquilaDb, nil
 }
@@ -62,21 +61,16 @@ func (a *AquilaDbStruct) SignDocument() {}
 func (a *AquilaDbStruct) InsertDocument(docInsert *DatatDocInsertStruct, url string) (*DocInsertResponseStruct, error) {
 
 	var docInsertResponse *DocInsertResponseStruct
-
-	// var buf bytes.Buffer
-	// err := json.NewEncoder(&buf).Encode(docInsert)
-	// if err != nil {
-	// 	return docInsertResponse, err
-	// }
-	signature, err := CreateSignatureWallet(docInsert)
-	if err != nil {
-		return docInsertResponse, err
-	}
 	insertDbRequest := &DocInsertRequestStruct{
 		Data:      *docInsert,
-		Signature: signature,
+		Signature: a.Wallet.SecretKey,
 	}
+	// fmt.Println("=========================")
+	// fmt.Print(a.Wallet.SecretKey)
+
 	req, err := json.Marshal(insertDbRequest)
+	// fmt.Println("=========================")
+	// fmt.Print(string(req[:]))  // write json to console
 	if err != nil {
 		return docInsertResponse, err
 	}
@@ -97,7 +91,8 @@ func (a *AquilaDbStruct) InsertDocument(docInsert *DatatDocInsertStruct, url str
 		return docInsertResponse, err
 	}
 
-	// fmt.Println(string(body)) // will write response in the console
+	// fmt.Println("================ill write re=========")
+	// fmt.Println(string(body)) // wsponse in the console
 	json.Unmarshal(body, &docInsertResponse)
 
 	return docInsertResponse, nil
@@ -110,16 +105,15 @@ func (a *AquilaDbStruct) DeleteDocument(docDelete *DeleteDataStruct, url string)
 
 	var docDeleteResponse *DocDeleteResponseStruct
 
-	signature, err := CreateSignatureWallet(docDelete)
-	if err != nil {
-		return docDeleteResponse, err
-	}
 	deleteDbRequest := &DocDeleteRequestStruct{
 		Data:      *docDelete,
-		Signature: signature,
+		Signature: a.Wallet.SecretKey,
 	}
+	// fmt.Printf("%+v", deleteDbRequest)
 
 	data, err := json.Marshal(deleteDbRequest)
+	// fmt.Println("=========================")
+	// fmt.Print(string(data[:])) // write json to console
 
 	resp, err := http.Post(
 		url,
@@ -137,19 +131,23 @@ func (a *AquilaDbStruct) DeleteDocument(docDelete *DeleteDataStruct, url string)
 	}
 
 	// fmt.Println(string(body)) // write response in the console
-
 	json.Unmarshal(body, &docDeleteResponse)
 
 	return docDeleteResponse, nil
 }
 
 // /db/search
-func (a *AquilaDbStruct) SearchKDocument(searchBody *SearchAquilaDbRequestStruct, url string) (*DocSearchResponseStruct, error) {
+func (a *AquilaDbStruct) SearchKDocument(searchBody *DataSearchStruct, url string) (*DocSearchResponseStruct, error) {
 	var docSearchResponse *DocSearchResponseStruct
+
+	searchDbStruct := &SearchAquilaDbRequestStruct{
+		Data:      *searchBody,
+		Signature: a.Wallet.SecretKey,
+	}
 
 	// get request
 	var buf bytes.Buffer
-	err := json.NewEncoder(&buf).Encode(searchBody)
+	err := json.NewEncoder(&buf).Encode(searchDbStruct)
 	if err != nil {
 		return docSearchResponse, err
 	}
@@ -165,36 +163,12 @@ func (a *AquilaDbStruct) SearchKDocument(searchBody *SearchAquilaDbRequestStruct
 	}
 
 	resp, err := http.DefaultClient.Do(req)
-
-	/*
-		// post request
-		var buf bytes.Buffer
-		err := json.NewEncoder(&buf).Encode(searchBody)
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		req, _ := json.Marshal(searchBody)
-
-		resp, err := http.Post(
-			// createURL,
-			"https://httpbin.org/post",
-			"application/json",
-			bytes.NewBuffer(req),
-		)
-		if err != nil {
-			print(err)
-		}
-		defer resp.Body.Close()
-	*/
-
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return docSearchResponse, err
 	}
 
 	// fmt.Println(string(body)) // will write response in the console
-
 	json.Unmarshal(body, &docSearchResponse)
 
 	return docSearchResponse, nil

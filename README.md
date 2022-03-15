@@ -104,3 +104,14 @@ Delete:
 ```
 responseDelete, err := moduleDb.AquilaModule().AquilaDbInterface.DeleteDocument(docDelete, url)
 ```
+
+Run test:
+```
+$ go test ./src/
+or
+$ go test ./src/ -v
+```
+Clear test cache:
+```
+$ go clean -testcache
+```

@@ -5,22 +5,22 @@ package src
 // =====================================
 
 type MetadataStructDocInsert struct {
-	Name string `json:"name"`
-	Age  int    `json:"age"`
+	Name string `json:"name" bson:"name"`
+	Age  int    `json:"age" bson:"age"`
 }
 
 type PayloadStruct struct {
-	Metadata MetadataStructDocInsert `json:"metadata"`
-	Code     []float64               `json:"code"`
+	Metadata MetadataStructDocInsert `json:"metadata" bson:"metadata"`
+	Code     []float64               `json:"code" bson:"code"`
 }
 
 type DocsStruct struct {
-	Payload PayloadStruct `json:"payload"`
+	Payload PayloadStruct `json:"payload" bson:"payload"`
 }
 
 type DatatDocInsertStruct struct {
-	Docs         []DocsStruct `json:"docs"`
-	DatabaseName string       `json:"database_name"`
+	Docs         []DocsStruct `json:"docs" bson:"docs"`
+	DatabaseName string       `json:"database_name" bson:"database_name"`
 }
 
 type DocInsertRequestStruct struct {
@@ -62,14 +62,15 @@ type AquilaHubResponseStruct struct {
 // =====================================
 
 type DataSearchStruct struct {
-	Matrix       [][]float64 `json:"matrix"`
-	K            int         `json:"k"`
-	R            int         `json:"r"`
-	DatabaseName string      `json:"database_name"`
+	Matrix       [][]float64 `json:"matrix" bson:"matrix"`
+	K            int         `json:"k" bson:"k"`
+	R            int         `json:"r" bson:"r"`
+	DatabaseName string      `json:"database_name" bson:"database_name"`
 }
 
 type SearchAquilaDbRequestStruct struct {
-	Data DataSearchStruct `json:"data"`
+	Data      DataSearchStruct `json:"data" bson:"data"`
+	Signature string           `json:"signature" bson:"signature"`
 }
 
 // --------------------------------
@@ -95,6 +96,11 @@ type DocSearchResponseStruct struct {
 // =====================================
 // Db Create:
 // =====================================
+
+type CreateAquilaHubResponsStruct struct {
+	DatabaseName string `json:"databaseName"`
+	Success      bool   `json:"success"`
+}
 
 type CreateAquilaResponsStruct struct {
 	DatabaseName string `json:"database_name"`
@@ -128,13 +134,13 @@ type CreateDbRequestStruct struct {
 // =====================================
 
 type DeleteDataStruct struct {
-	Ids          []string `json:"ids"`
-	DatabaseName string   `json:"database_name"`
+	Ids          []string `json:"ids" bson:"ids"`
+	DatabaseName string   `json:"database_name" bson:"database_name"`
 }
 
 type DocDeleteRequestStruct struct {
-	Data      DeleteDataStruct `json:"data"`
-	Signature string           `json:"signature"`
+	Data      DeleteDataStruct `json:"data" bson:"data"`
+	Signature string           `json:"signature" bson:"signature"`
 }
 
 // ----------------------------

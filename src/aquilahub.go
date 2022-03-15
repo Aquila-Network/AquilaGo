@@ -3,23 +3,32 @@ package src
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"io/ioutil"
 	"net/http"
 )
 
 type AquilaHubStruct struct {
+	Wallet WalletStruct
 }
 
-func NewAquilaHub() *AquilaHubStruct {
-	return &AquilaHubStruct{}
+func NewAquilaHub(wallet WalletStruct) *AquilaHubStruct {
+	return &AquilaHubStruct{
+		Wallet: wallet,
+	}
 }
 
 // /prepare
-func (a *AquilaHubStruct) CreateDatabase(createDb *CreateDbRequestStruct, url string) (*CreateAquilaResponsStruct, error) {
+func (a *AquilaHubStruct) CreateDatabase(createDb *DataStructCreateDb, url string) (*CreateAquilaHubResponsStruct, error) {
 
-	var responseAquilaDb *CreateAquilaResponsStruct
-	data, err := json.Marshal(createDb)
+	createDbRequest := &CreateDbRequestStruct{
+		Data:      *createDb,
+		Signature: a.Wallet.SecretKey,
+	}
+	// fmt.Println("============================")
+	// fmt.Printf("%+v", createDbRequest)
+
+	var responseAquilaDb *CreateAquilaHubResponsStruct
+	data, err := json.Marshal(createDbRequest)
 
 	resp, err := http.Post(
 		url,
@@ -37,7 +46,8 @@ func (a *AquilaHubStruct) CreateDatabase(createDb *CreateDbRequestStruct, url st
 	}
 
 	json.Unmarshal(body, &responseAquilaDb)
-	fmt.Println(string(body)) // write response in the console
+	// fmt.Println("============================")
+	// fmt.Println(string(body)) // write response in the console
 
 	return responseAquilaDb, nil
 }
