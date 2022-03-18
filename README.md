@@ -105,12 +105,31 @@ Delete:
 responseDelete, err := moduleDb.AquilaModule().AquilaDbInterface.DeleteDocument(docDelete, url)
 ```
 
-Run test:
+# Test
+
+Copy .env_dist to .env. Then put your credentials in the .env file.
+```
+$ cp .env_dist .env
+```
+
+Run tests:
 ```
 $ go test ./src/
 or
 $ go test ./src/ -v
 ```
+
+Run separate test:
+```
+$ go test ./src/ -v -run CreateDatabase
+$ go test ./src/ -v -run TestInsertDocument
+$ go test ./src/ -v -run TestSearch
+$ go test ./src/ -v -run TestDeleteDocument
+
+$ go test ./src/ -v -run TestCreateHubDatabase
+$ go test ./src/ -v -run TestCompressDocument
+```
+
 Clear test cache:
 ```
 $ go clean -testcache
